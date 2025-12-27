@@ -1,0 +1,27 @@
+[slack.my-slack]
+Token="${SLACK_TOKEN}"
+AppToken="${SLACK_APP_TOKEN}"
+UseSocketMode=true
+UseRTM=false
+RemoteNickFormat="{NICK} "
+
+[discord.my-discord]
+Token="${DISCORD_TOKEN}"
+Server="${DISCORD_SERVER_ID}"
+AutoWebhooks=true
+RemoteNickFormat="{NICK} "
+WebhookNameFormat="{NICK} "
+WebhookAvatarFormat="{AVATARURL}"
+
+[[gateway]]
+name="main-bridge"
+enable=true
+PreserveThreading=true
+
+  [[gateway.inout]]
+  account="slack.my-slack"
+  channel="archiver-exp"
+
+  [[gateway.inout]]
+  account="discord.my-discord"
+  channel="exp-channel"
