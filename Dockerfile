@@ -11,6 +11,9 @@ RUN git clone https://github.com/DavyJohnes/matterbridge.git . \
 # Final stage
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates python3 gettext curl jq
+WORKDIR /app
+COPY channels.csv /app/channels.csv
+COPY generate_matterbridge_config.py /app/generate_matterbridge_config.py
 COPY --from=builder /app/matterbridge /bin/matterbridge
 
 COPY matterbridge.toml /etc/matterbridge/matterbridge.toml

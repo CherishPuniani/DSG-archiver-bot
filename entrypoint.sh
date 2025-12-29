@@ -43,8 +43,28 @@ else
     echo "DEBUG: DISCORD_SERVER_ID is '$DISCORD_SERVER_ID'"
 fi
 
-echo "DEBUG: Generating configuration file..."
-envsubst '$SLACK_TOKEN,$SLACK_APP_TOKEN,$DISCORD_TOKEN,$DISCORD_SERVER_ID' < /etc/matterbridge/matterbridge.toml > /etc/matterbridge/matterbridge-run.toml
+TEMPLATE_PATH="/etc/matterbridge/matterbridge.toml"
+EXPANDED_TEMPLATE="/etc/matterbridge/matterbridge-expanded.toml"
+
+if [ -f "/app/generate_matterbridge_config.py" ] && [ -f "/app/channels.csv" ]; then
+    echo "DEBUG: Expanding gateway list from CSV..."
+    python3 /app/generate_matterbridge_config.py \
+        --csv /app/channels.csv \
+        --template "$TEMPLATE_PATH" \
+        --output "$EXPANDED_TEMPLATE"
+    TEMPLATE_TO_USE="$EXPANDED_TEMPLATE"
+else
+    echo "WARN: CSV or generator script missing; using static template"
+    TEMPLATE_TO_USE="$TEMPLATE_PATH"
+fi
+
+if [ -f "$TEMPLATE_TO_USE" ]; then
+    echo "DEBUG: Generating configuration file..."
+    envsubst '$SLACK_TOKEN,$SLACK_APP_TOKEN,$DISCORD_TOKEN,$DISCORD_SERVER_ID' < "$TEMPLATE_TO_USE" > /etc/matterbridge/matterbridge-run.toml
+else
+    echo "ERROR: Template $TEMPLATE_TO_USE not found"
+    exit 1
+fi
 
 
 echo "DEBUG: Starting Matterbridge..."

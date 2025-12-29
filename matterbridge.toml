@@ -12,16 +12,5 @@ AutoWebhooks=true
 RemoteNickFormat="{NICK} "
 WebhookNameFormat="{NICK} "
 WebhookAvatarFormat="{AVATARURL}"
-
-[[gateway]]
-name="main-bridge"
-enable=true
-PreserveThreading=true
-
-  [[gateway.inout]]
-  account="slack.my-slack"
-  channel="archiver-exp"
-
-  [[gateway.inout]]
-  account="discord.my-discord"
-  channel="exp-channel"
+# Gateway definitions are injected from channels.csv
+##__GENERATED_GATEWAYS__##
