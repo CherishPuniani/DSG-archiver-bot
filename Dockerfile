@@ -10,10 +10,13 @@ RUN git clone https://github.com/DavyJohnes/matterbridge.git . \
 
 # Final stage
 FROM alpine:latest
-RUN apk add --no-cache ca-certificates python3 gettext curl jq
+RUN apk add --no-cache ca-certificates python3 py3-pip gettext curl jq \
+    && pip install --break-system-packages discord.py pandas dotenv slack_bolt
 WORKDIR /app
+COPY slack_watcher.py /app/slack_watcher.py
 COPY channels.csv /app/channels.csv
 COPY generate_matterbridge_config.py /app/generate_matterbridge_config.py
+COPY create_discord_channels.py /app/create_discord_channels.py
 COPY --from=builder /app/matterbridge /bin/matterbridge
 
 COPY matterbridge.toml /etc/matterbridge/matterbridge.toml

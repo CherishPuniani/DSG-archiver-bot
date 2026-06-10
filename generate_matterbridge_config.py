@@ -31,7 +31,7 @@ def read_channels(csv_path: Path):
     for index, row in enumerate(data_rows, start=2 if use_header else 1):
         if len(row) < 2:
             continue
-        slack_id, channel_name = row[1].strip(), row[1].strip()
+        slack_id, channel_name = row[0].strip(), row[1].strip()
         if not slack_id or not channel_name:
             continue
         channels.append((slack_id, channel_name, index))
