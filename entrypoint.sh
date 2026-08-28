@@ -58,8 +58,15 @@ else
     TEMPLATE_TO_USE="$TEMPLATE_PATH"
 fi
 
+if [ -f "/app/create_discord_channels.py" ]; then
+    echo "DEBUG: Executing channel sync script..."
+    python3 /app/create_discord_channels.py
+else
+    echo "ERROR: couldn't run create_discord_channel.py file"
+fi
 if [ -f "$TEMPLATE_TO_USE" ]; then
     echo "DEBUG: Generating configuration file..."
+
     envsubst '$SLACK_TOKEN,$SLACK_APP_TOKEN,$DISCORD_TOKEN,$DISCORD_SERVER_ID' < "$TEMPLATE_TO_USE" > /etc/matterbridge/matterbridge-run.toml
 else
     echo "ERROR: Template $TEMPLATE_TO_USE not found"
